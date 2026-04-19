@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Client Onboarding Questionnaire</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f4f6fb;
+    color: #1a1a2e;
+    padding: 40px 20px 60px;
+    min-height: 100vh;
+  }
+
+  .wrapper {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #e63946 0%, #c1121f 100%);
+    border-radius: 18px 18px 0 0;
+    padding: 36px 40px 30px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '🥟';
+    position: absolute;
+    right: 36px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 72px;
+    opacity: 0.18;
+  }
+  .header .agency-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.18);
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .header p {
+    font-size: 13.5px;
+    opacity: 0.88;
+    line-height: 1.6;
+    max-width: 500px;
+  }
+
+  /* BADGES */
+  .badges {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 5px 13px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  /* PROGRESS */
+  .progress-bar-wrap {
+    background: #fff;
+    padding: 16px 40px;
+    border-left: 4px solid #e63946;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .progress-label { font-size: 12px; color: #666; white-space: nowrap; }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: #eee;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #e63946, #ff6b6b);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-pct { font-size: 12px; font-weight: 600; color: #e63946; }
+
+  /* BODY */
+  .body { background: #fff; padding: 0 40px 40px; border-radius: 0 0 18px 18px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+
+  /* SECTION */
+  .section {
+    padding-top: 38px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  .section-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .icon-red { background: #fff0f1; }
+  .icon-blue { background: #eff6ff; }
+  .icon-purple { background: #f5f0ff; }
+  .icon-green { background: #f0fff4; }
+  .icon-orange { background: #fff7ed; }
+
+  .section-title h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  .section-title p {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  /* FIELDS */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .field-grid .full { grid-column: 1 / -1; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+  }
+  .field label span.req { color: #e63946; margin-left: 3px; }
+  .field label .hint {
+    font-weight: 400;
+    color: #999;
+    font-size: 11.5px;
+    margin-left: 4px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-family: 'Inter', sans-serif;
+    color: #1a1a2e;
+    background: #fafafa;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #e63946;
+    box-shadow: 0 0 0 3px rgba(230,57,70,0.08);
+    background: #fff;
+  }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+  select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+  /* CHECKBOX GROUP */
+  .check-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 2px;
+  }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: #f8f8f8;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 13px;
+  }
+  .check-item:hover { border-color: #e63946; background: #fff0f1; }
+  .check-item input[type="checkbox"] {
+    width: 15px; height: 15px; accent-color: #e63946; cursor: pointer;
+    border: none; padding: 0; background: none; box-shadow: none;
+  }
+  .check-item.checked {
+    border-color: #e63946;
+    background: #fff0f1;
+    color: #c1121f;
+    font-weight: 500;
+  }
+
+  /* RADIO GROUP */
+  .radio-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 2px; }
+  .radio-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: #f8f8f8;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+  .radio-item:hover { border-color: #e63946; background: #fff0f1; }
+  .radio-item input[type="radio"] {
+    accent-color: #e63946; cursor: pointer;
+    width: 15px; height: 15px; border: none; padding: 0; background: none; box-shadow: none;
+  }
+  .radio-item.checked { border-color: #e63946; background: #fff0f1; color: #c1121f; font-weight: 500; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, #e63946 0%, transparent 100%);
+    margin: 6px 0 28px;
+    opacity: 0.2;
+  }
+
+  /* NOTE BOX */
+  .note-box {
+    background: #fffbf0;
+    border: 1px solid #ffe082;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 12.5px;
+    color: #7a5c00;
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+
+  /* SUBMIT */
+  .submit-area {
+    margin-top: 40px;
+    text-align: center;
+  }
+  .submit-btn {
+    background: linear-gradient(135deg, #e63946, #c1121f);
+    color: #fff;
+    border: none;
+    padding: 15px 48px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 14px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 18px rgba(230,57,70,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(230,57,70,0.45);
+  }
+  .submit-note { font-size: 12px; color: #aaa; margin-top: 12px; }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 40px;
+  }
+  .success-screen.show { display: block; }
+  .success-icon { font-size: 60px; margin-bottom: 18px; }
+  .success-screen h2 { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
+  .success-screen p { color: #666; font-size: 14px; line-height: 1.7; }
+
+  @media (max-width: 580px) {
+    .header, .body { padding-left: 22px; padding-right: 22px; }
+    .progress-bar-wrap { padding: 14px 22px; }
+    .field-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="agency-tag">Client Onboarding Form</div>
+    <h1>Social Media & Local Marketing<br>Questionnaire</h1>
+    <p>Help us understand your momo business so we can craft the perfect Facebook, Instagram & Google marketing strategy for you.</p>
+    <div class="badges">
+      <span class="badge">📘 Facebook Marketing</span>
+      <span class="badge">📸 Instagram Marketing</span>
+      <span class="badge">📍 Google My Business</span>
+      <span class="badge">🗺️ Map Listing</span>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar-wrap">
+    <span class="progress-label">Form Progress</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-pct" id="progressPct">0%</span>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+    <form id="mainForm" novalidate>
+
+      <!-- SECTION 1: BASIC BUSINESS INFO -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon icon-red">🏪</div>
+          <div class="section-title">
+            <h2>Section 1 — Business Information</h2>
+            <p>Basic details about your momo outlet</p>
+          </div>
+        </div>
+        <div class="field-grid">
+          <div class="field full">
+            <label>Business / Outlet Name <span class="req">*</span></label>
+            <input type="text" placeholder="e.g. Momo House, Dumpling Street..." required />
+          </div>
+          <div class="field">
+            <label>Owner / Contact Person <span class="req">*</span></label>
+            <input type="text" placeholder="Full name" required />
+          </div>
+          <div class="field">
+            <label>Phone Number <span class="req">*</span></label>
+            <input type="tel" placeholder="+91 XXXXX XXXXX" required />
+          </div>
+          <div class="field full">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" placeholder="business@example.com" required />
+          </div>
+          <div class="field full">
+            <label>Full Business Address <span class="req">*</span>
+              <span class="hint">(as you want it to appear on Google Maps)</span>
+            </label>
+            <textarea rows="2" placeholder="Shop no., Street, Locality, City, PIN Code"></textarea>
+          </div>
+          <div class="field">
+            <label>City / Area of Operation <span class="req">*</span></label>
+            <input type="text" placeholder="e.g. Kolkata, Guwahati..." required />
+          </div>
+          <div class="field">
+            <label>Year Established</label>
+            <input type="text" placeholder="e.g. 2019" />
+          </div>
+          <div class="field full">
+            <label>Business Hours <span class="req">*</span></label>
+            <input type="text" placeholder="e.g. Mon–Sat 11am–10pm, Sun 12pm–9pm" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 2: MENU & OFFERINGS -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon icon-orange">🥟</div>
+          <div class="section-title">
+            <h2>Section 2 — Menu & Specialties</h2>
+            <p>Tell us what makes your momos special</p>
+          </div>
+        </div>
+        <div class="field-grid">
+          <div class="field full">
+            <label>Types of Momos You Offer <span class="req">*</span></label>
+            <div class="check-group" id="momoTypes">
+              <label class="check-item"><input type="checkbox" /> Steamed</label>
+              <label class="check-item"><input type="checkbox" /> Fried</label>
+              <label class="check-item"><input type="checkbox" /> Tandoori</label>
+              <label class="check-item"><input type="checkbox" /> Pan-Fried (Kothey)</label>
+              <label class="check-item"><input type="checkbox" /> Soup Momo</label>
+              <label class="check-item"><input type="checkbox" /> C-Momo</label>
+              <label class="check-item"><input type="checkbox" /> Jhol Momo</label>
+              <label class="check-item"><input type="checkbox" /> Kurkure / Crispy</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Filling Options Available</label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" /> Chicken</label>
+              <label class="check-item"><input type="checkbox" /> Pork</label>
+              <label class="check-item"><input type="checkbox" /> Buff/Mutton</label>
+              <label class="check-item"><input type="checkbox" /> Veg</label>
+              <label class="check-item"><input type="checkbox" /> Paneer</label>
+              <label class="check-item"><input type="checkbox" /> Mixed</label>
+              <label class="check-item"><input type="checkbox" /> Cheese</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Best-Selling / Signature Item <span class="req">*</span></label>
+            <input type="text" placeholder="e.g. Spicy Jhol Momo, Tandoori Chicken Momo..." required />
+          </div>
+          <div class="field">
+            <label>Price Range (per plate)</label>
+            <input type="text" placeholder="e.g. ₹60 – ₹180" />
+          </div>
+          <div class="field">
+            <label>Do You Offer Delivery?</label>
+            <div class="radio-group" id="delivery">
+              <label class="radio-item"><input type="radio" name="delivery" value="yes" /> Yes</label>
+              <label class="radio-item"><input type="radio" name="delivery" value="no" /> No</label>
+              <label class="radio-item"><input type="radio" name="delivery" value="planning" /> Planning to</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Online Ordering Platforms (if any)</label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" /> Zomato</label>
+              <label class="check-item"><input type="checkbox" /> Swiggy</label>
+              <label class="check-item"><input type="checkbox" /> Own Website</label>
+              <label class="check-item"><input type="checkbox" /> WhatsApp Orders</label>
+              <label class="check-item"><input type="checkbox" /> None</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Any Other Menu Items Besides Momos?</label>
+            <textarea placeholder="e.g. Thukpa, Chowmein, Wonton Soup, Spring Rolls..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 3: SOCIAL MEDIA -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon icon-blue">📱</div>
+          <div class="section-title">
+            <h2>Section 3 — Facebook & Instagram Marketing</h2>
+            <p>Current presence & goals for social media</p>
+          </div>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label>Do You Have a Facebook Page?</label>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="fbpage" value="yes" /> Yes</label>
+              <label class="radio-item"><input type="radio" name="fbpage" value="no" /> No (create new)</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Facebook Page URL / Name</label>
+            <input type="url" placeholder="https://facebook.com/yourpage" />
+          </div>
+          <div class="field">
+            <label>Do You Have an Instagram Account?</label>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="igacct" value="yes" /> Yes</label>
+              <label class="radio-item"><input type="radio" name="igacct" value="no" /> No (create new)</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Instagram Handle</label>
+            <input type="text" placeholder="@yourhandle" />
+          </div>
+          <div class="field full">
+            <label>What Do You Want from Social Media? <span class="req">*</span></label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" /> More Footfall</label>
+              <label class="check-item"><input type="checkbox" /> Brand Awareness</label>
+              <label class="check-item"><input type="checkbox" /> Promote Offers / Combos</label>
+              <label class="check-item"><input type="checkbox" /> Grow Followers</label>
+              <label class="check-item"><input type="checkbox" /> Drive Online Orders</label>
+              <label class="check-item"><input type="checkbox" /> Announce New Items</label>
+              <label class="check-item"><input type="checkbox" /> Customer Engagement</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>What Content Do You Want Posted?</label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" /> Food Photos</label>
+              <label class="check-item"><input type="checkbox" /> Reels / Short Videos</label>
+              <label class="check-item"><input type="checkbox" /> Behind-the-Scenes</label>
+              <label class="check-item"><input type="checkbox" /> Offers & Discounts</label>
+              <label class="check-item"><input type="checkbox" /> Customer Reviews</label>
+              <label class="check-item"><input type="checkbox" /> Festival / Occasion Posts</label>
+              <label class="check-item"><input type="checkbox" /> Memes / Trending Content</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Preferred Posting Frequency</label>
+            <select>
+              <option value="">Select...</option>
+              <option>Daily</option>
+              <option>3–4 times a week</option>
+              <option>Twice a week</option>
+              <option>Weekly</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Monthly Ad Budget (Facebook/Instagram)</label>
+            <select>
+              <option value="">Select...</option>
+              <option>Under ₹2,000</option>
+              <option>₹2,000 – ₹5,000</option>
+              <option>₹5,000 – ₹10,000</option>
+              <option>₹10,000 – ₹20,000</option>
+              <option>₹20,000+</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label>Do You Have Existing Photos / Videos of Your Food?</label>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="media" value="yes" /> Yes, I'll share them</label>
+              <label class="radio-item"><input type="radio" name="media" value="no" /> No, need a photoshoot</label>
+              <label class="radio-item"><input type="radio" name="media" value="few" /> A few, need more</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Tone / Personality for Your Brand</label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" /> Fun & Quirky</label>
+              <label class="check-item"><input type="checkbox" /> Warm & Friendly</label>
+              <label class="check-item"><input type="checkbox" /> Bold & Trendy</label>
+              <label class="check-item"><input type="checkbox" /> Local & Community-Driven</label>
+              <label class="check-item"><input type="checkbox" /> Premium & Aspirational</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Competitors or Pages You Admire <span class="hint">(for reference)</span></label>
+            <textarea placeholder="e.g. @moksha_momos, any local food pages you like the style of..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 4: TARGET AUDIENCE -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon icon-purple">🎯</div>
+          <div class="section-title">
+            <h2>Section 4 — Target Audience</h2>
+            <p>Who are your ideal customers?</p>
+          </div>
+        </div>
+        <div class="field-grid">
+          <div class="field full">
+            <label>Who Are Your Primary Customers? <span class="req">*</span></label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" /> College Students</label>
+              <label class="check-item"><input type="checkbox" /> Office Goers</label>
+              <label class="check-item"><input type="checkbox" /> Families</label>
+              <label class="check-item"><input type="checkbox" /> Teens & Young Adults</label>
+              <label class="check-item"><input type="checkbox" /> Delivery-First Customers</label>
+              <label class="check-item"><input type="checkbox" /> Late-Night Snackers</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Target Age Group</label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" /> 13–18</label>
+              <label class="check-item"><input type="checkbox" /> 18–25</label>
+              <label class="check-item"><input type="checkbox" /> 25–35</label>
+              <label class="check-item"><input type="checkbox" /> 35–50</label>
+              <label class="check-item"><input type="checkbox" /> 50+</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Target Radius for Local Ads</label>
+            <select>
+              <option value="">Select...</option>
+              <option>1 km</option>
+              <option>2–3 km</option>
+              <option>5 km</option>
+              <option>10 km</option>
+              <option>City-wide</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label>Specific Neighbourhoods / Areas to Target</label>
+            <input type="text" placeholder="e.g. Salt Lake, New Town, Park Street..." />
+          </div>
+          <div class="field full">
+            <label>Any Nearby Landmarks, Colleges or Offices? <span class="hint">(helps geo-targeting)</span></label>
+            <input type="text" placeholder="e.g. near Jadavpur University, near TCS Siruseri..." />
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 5: GMB & LOCAL MARKETING -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon icon-green">📍</div>
+          <div class="section-title">
+            <h2>Section 5 — Google My Business & Map Listing</h2>
+            <p>Local SEO and Google visibility setup</p>
+          </div>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label>Do You Have a Google My Business Listing?</label>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="gmb" value="yes" /> Yes, verified</label>
+              <label class="radio-item"><input type="radio" name="gmb" value="unverified" /> Yes, unverified</label>
+              <label class="radio-item"><input type="radio" name="gmb" value="no" /> No</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>GMB Profile URL <span class="hint">(if exists)</span></label>
+            <input type="url" placeholder="https://g.page/youroutlet" />
+          </div>
+          <div class="field full">
+            <label>Google Account Email for GMB Access <span class="req">*</span></label>
+            <input type="email" placeholder="yourname@gmail.com" required />
+          </div>
+          <div class="field full">
+            <label>Business Name (Exact) for Google Listing <span class="req">*</span>
+              <span class="hint">(must match your signage / legal name)</span>
+            </label>
+            <input type="text" placeholder="Exact business name as on signboard" required />
+          </div>
+          <div class="field full">
+            <label>Exact Location / Pin Address for Maps <span class="req">*</span></label>
+            <textarea rows="2" placeholder="Include landmark, building, floor if applicable — used for dropping pin accurately"></textarea>
+          </div>
+          <div class="field">
+            <label>Primary Business Category</label>
+            <select>
+              <option value="">Select...</option>
+              <option>Restaurant</option>
+              <option>Fast Food Restaurant</option>
+              <option>Street Food</option>
+              <option>Takeaway Restaurant</option>
+              <option>Food Stall</option>
+              <option>Cloud Kitchen</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Do You Have a Website?</label>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="website" value="yes" /> Yes</label>
+              <label class="radio-item"><input type="radio" name="website" value="no" /> No</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Website URL <span class="hint">(if applicable)</span></label>
+            <input type="url" placeholder="https://yourwebsite.com" />
+          </div>
+          <div class="field full">
+            <label>Services to List on GMB Profile</label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" /> Dine-In</label>
+              <label class="check-item"><input type="checkbox" /> Takeaway</label>
+              <label class="check-item"><input type="checkbox" /> Home Delivery</label>
+              <label class="check-item"><input type="checkbox" /> Bulk / Party Orders</label>
+              <label class="check-item"><input type="checkbox" /> Catering</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Do You Have Customer Reviews Already?</label>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="reviews" value="yes" /> Yes (on Google)</label>
+              <label class="radio-item"><input type="radio" name="reviews" value="zomato" /> Yes (on Zomato/Swiggy)</label>
+              <label class="radio-item"><input type="radio" name="reviews" value="no" /> No reviews yet</label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Photos to Upload on GMB <span class="hint">(what do you have?)</span></label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" /> Outlet Exterior</label>
+              <label class="check-item"><input type="checkbox" /> Outlet Interior</label>
+              <label class="check-item"><input type="checkbox" /> Food Photos</label>
+              <label class="check-item"><input type="checkbox" /> Menu</label>
+              <label class="check-item"><input type="checkbox" /> Team / Staff</label>
+              <label class="check-item"><input type="checkbox" /> None yet</label>
+            </div>
+          </div>
+          <div class="field full">
+            <div class="note-box">
+              ⚠️ <strong>Important:</strong> To manage your GMB listing, we will need Temporary Manager Access to your Google Business Profile. We'll guide you through adding us — no need to share passwords.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 6: BRANDING -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon icon-red">🎨</div>
+          <div class="section-title">
+            <h2>Section 6 — Branding & Assets</h2>
+            <p>Visuals and brand identity we can use</p>
+          </div>
+        </div>
+        <div class="field-grid">
+          <div class="field full">
+            <label>Do You Have a Logo?</label>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="logo" value="yes" /> Yes, I'll share it</label>
+              <label class="radio-item"><input type="radio" name="logo" value="no" /> No, need one</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Brand Colors <span class="hint">(if you have them)</span></label>
+            <input type="text" placeholder="e.g. Red & White, Saffron & Green..." />
+          </div>
+          <div class="field">
+            <label>Tagline / Slogan <span class="hint">(if any)</span></label>
+            <input type="text" placeholder="e.g. 'Every bite, a hug from home'" />
+          </div>
+          <div class="field full">
+            <label>Languages for Content</label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" /> English</label>
+              <label class="check-item"><input type="checkbox" /> Hindi</label>
+              <label class="check-item"><input type="checkbox" /> Bengali</label>
+              <label class="check-item"><input type="checkbox" /> Nepali</label>
+              <label class="check-item"><input type="checkbox" /> Assamese</label>
+              <label class="check-item"><input type="checkbox" /> Mixed / Hinglish</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 7: FINAL -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon icon-green">📝</div>
+          <div class="section-title">
+            <h2>Section 7 — Final Notes</h2>
+            <p>Anything else we should know</p>
+          </div>
+        </div>
+        <div class="field-grid">
+          <div class="field full">
+            <label>What's Your Biggest Marketing Challenge Right Now?</label>
+            <textarea placeholder="e.g. Not getting enough visibility, no repeat customers, new outlet needs awareness..."></textarea>
+          </div>
+          <div class="field full">
+            <label>Any Special Offers, Combos or Promotions to Highlight?</label>
+            <textarea placeholder="e.g. Buy 2 get 1 free on weekends, student discount, party platters..."></textarea>
+          </div>
+          <div class="field full">
+            <label>Any Seasonal Items or Upcoming Launches?</label>
+            <input type="text" placeholder="e.g. Winter special soup momo, new spicy variant..." />
+          </div>
+          <div class="field full">
+            <label>Anything Else You'd Like Us to Know?</label>
+            <textarea placeholder="Any preferences, restrictions, past experiences, or ideas you'd like to share..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="submit-area">
+        <button type="submit" class="submit-btn">Submit Questionnaire ✓</button>
+        <p class="submit-note">All information is kept strictly confidential and used only for your marketing strategy.</p>
+      </div>
+
+    </form>
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">🎉</div>
+      <h2>Thank You! We've Got Everything.</h2>
+      <p>Your onboarding questionnaire has been submitted successfully.<br>
+      Our team will review your details and reach out within <strong>24–48 hours</strong> to kick off your momo marketing journey! 🥟</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Progress tracker
+  function updateProgress() {
+    const form = document.getElementById('mainForm');
+    const required = form.querySelectorAll('[required]');
+    let filled = 0;
+    required.forEach(el => { if (el.value.trim()) filled++; });
+    const pct = Math.round((filled / required.length) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  document.getElementById('mainForm').addEventListener('input', updateProgress);
+
+  // Checkbox highlight
+  document.querySelectorAll('.check-item').forEach(item => {
+    const cb = item.querySelector('input[type="checkbox"]');
+    cb.addEventListener('change', () => {
+      item.classList.toggle('checked', cb.checked);
+    });
+  });
+
+  // Radio highlight
+  document.querySelectorAll('.radio-item').forEach(item => {
+    const rb = item.querySelector('input[type="radio"]');
+    rb.addEventListener('change', () => {
+      const group = document.querySelectorAll(`input[name="${rb.name}"]`);
+      group.forEach(r => r.closest('.radio-item').classList.remove('checked'));
+      item.classList.add('checked');
+    });
+  });
+
+  // Submit
+  document.getElementById('mainForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('mainForm').style.display = 'none';
+    document.getElementById('successScreen').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
